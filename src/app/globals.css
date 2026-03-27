@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens ─────────────────────────────────────────── */
+@theme {
+  /* Colors */
+  --color-near-black:   #0A0A0A;
+  --color-off-white:    #FAF8F5;
+  --color-gold:         #C5A572;
+  --color-muted:        #6B6B6B;
+  --color-border:       #E8E4DF;
+  --color-cream:        #F5F0EB;
+  --color-error:        #8B1A1A;
+
+  /* Fonts */
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body:    "DM Sans", system-ui, -apple-system, sans-serif;
+
+  /* Spacing */
+  --spacing-section-mobile:  80px;
+  --spacing-section-desktop: 120px;
+
+  /* Container */
+  --container-arthaus: 1400px;
+
+  /* Custom easing */
+  --ease-gallery: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Animations */
+  --animate-ken-burns: ken-burns 20s ease-in-out infinite alternate;
+  --animate-float:     float 4s ease-in-out infinite;
+  --animate-marquee:   marquee 40s linear infinite;
+  --animate-shimmer:   shimmer 1.5s ease-in-out infinite;
+}
+
+/* ─── CSS Custom Properties (also used by JS/Framer) ───────── */
+:root {
+  --bg:           #FAF8F5;
+  --text:         #0A0A0A;
+  --gold:         #C5A572;
+  --muted:        #6B6B6B;
+  --border-color: #E8E4DF;
+  --cream:        #F5F0EB;
+  --card-bg:      #FFFFFF;
+  --footer-bg:    #0A0A0A;
+}
+
+[data-theme="dark"] {
+  --bg:           #0A0A0A;
+  --text:         #FAF8F5;
+  --gold:         #C5A572;
+  --muted:        #8A8A8A;
+  --border-color: #2A2A2A;
+  --cream:        #1A1A1A;
+  --card-bg:      #1A1A1A;
+  --footer-bg:    #050505;
+}
+
+/* ─── Keyframes ─────────────────────────────────────────────── */
+@keyframes ken-burns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* ─── Base Styles ───────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typography ────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* ─── Selection ─────────────────────────────────────────────── */
+::selection {
+  background-color: #0A0A0A;
+  color: #C5A572;
+}
+
+/* ─── Grain Texture Pseudo-element ─────────────────────────── */
+.grain-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: #C5A572; border-radius: 3px; }
+
+/* ─── Link underline draw ───────────────────────────────────── */
+.link-draw {
+  position: relative;
+  text-decoration: none;
+}
+.link-draw::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 300ms var(--ease-gallery);
+}
+.link-draw:hover::after { width: 100%; }
+
+/* ─── Custom cursor — hide default on fine-pointer (desktop) ── */
+@media (pointer: fine) {
+  *, *::before, *::after { cursor: none !important; }
+}
+
+/* ─── Focus visible ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #C5A572;
+  outline-offset: 3px;
+}
+
+/* ─── Utility: shimmer skeleton ────────────────────────────── */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #E8E4DF 25%,
+    #F5F0EB 50%,
+    #E8E4DF 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+[data-theme="dark"] .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #1A1A1A 25%,
+    #2A2A2A 50%,
+    #1A1A1A 75%
+  );
+  background-size: 200% 100%;
+}
